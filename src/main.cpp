@@ -1,15 +1,16 @@
 #include <Arduino.h>
 
-#define RECEIVER_IR 12
-#define EMMITTER_PIN 36
+#define RECEIVER_IR 32
+#define EMMITTER_PIN 23
 int reading = 0;
 
-#define FREQ 5000 
+#define FREQ 2 
 #define DUTY_CYCLE 64
 #define CHANNEL 0
 #define RESOLUTION 8 
 
-unsigned long irReload = 125;
+unsigned long irReload = 100;
+int current_time = millis();
 
 void readIR();
 void enEmmitter();
@@ -23,20 +24,21 @@ void setup(){
 }
 
 void loop(){
-  readIR();
-}
-
-void readIR(){
-  unsigned long current_time = millis();
+  //Serial.println("IGlol");
+  ledcWrite(CHANNEL, 64);
 
   if(millis() - current_time >= irReload){
     reading = analogRead(RECEIVER_IR);
     current_time = millis();
     Serial.println(reading); 
   }
+}
+
+void readIR(){
+  
 
 }
 
 void enEmmitter(){ 
-  ledcWrite(CHANNEL, 64);
+  
 }
