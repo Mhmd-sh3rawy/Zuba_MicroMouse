@@ -183,3 +183,92 @@ void loop() {
   delay(500);
 }
 ```
+
+
+# IR_driver
+
+```cpp
+#include <Arduino.h>
+
+#define RECEIVER_IR 32
+#define EMMITTER_PIN 23
+int reading = 0;
+
+#define FREQ 2 
+#define DUTY_CYCLE 128
+#define CHANNEL 0
+#define RESOLUTION 8 
+
+unsigned long irReload = 100;
+int current_time = millis();
+
+void readIR();
+void enEmmitter();
+
+void setup(){ 
+  Serial.begin(115200);
+  pinMode(RECEIVER_IR, INPUT);
+  pinMode(EMMITTER_PIN, OUTPUT);
+  ledcSetup(CHANNEL, FREQ, RESOLUTION);
+  ledcAttachPin(EMMITTER_PIN, CHANNEL); 
+}
+
+void loop(){
+  //Serial.println("IGlol");
+  ledcWrite(CHANNEL, DUTY_CYCLE);
+
+  if(millis() - current_time >= irReload){
+    reading = analogRead(RECEIVER_IR);
+    current_time = millis();
+    Serial.println(reading); 
+  }
+}
+
+void readIR(){
+  
+
+}
+
+void enEmmitter(){ 
+  
+}
+```
+
+```cpp
+#include <Arduino.h>
+#include <SteerBot_TB6612.h>
+
+const int AIN1 = 16;
+const int AIN2 = 8;
+const int BIN1 = 14;
+const int BIN2 = 15;
+int speed = 155; 
+const int ENA = 13;
+const int ENB = 17;
+int r;  
+
+// Create an instance of the SteerBot-TB6612 class for QCTT
+SteerBot_TB6612 QCTT(ENA, ENB, AIN1, AIN2, BIN1, BIN2, speed);
+void setup() {
+  pinMode(3, INPUT); // Line sensors
+  pinMode(10, INPUT);
+  pinMode(6, INPUT); // IR distance sensor
+
+  // Speed control
+  pinMode(ENA, OUTPUT);
+  pinMode(ENB, OUTPUT);
+  
+  // Outputs
+  pinMode(AIN1, OUTPUT);
+  pinMode(AIN2, OUTPUT);
+  pinMode(BIN1, OUTPUT);
+  pinMode(BIN2, OUTPUT);
+  pinMode(LED_BUILTIN, OUTPUT);
+}
+
+void loop() {
+  QCTT.Backward(5000,75,15);
+
+  QCTT.Stop(600);
+}
+```
